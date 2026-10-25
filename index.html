@@ -47,10 +47,16 @@
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-4 py-3">
-  <div id="chips" class="flex flex-wrap gap-1.5 mb-3"></div>
-  <div id="grid" class="flex flex-wrap gap-2"></div>
-</main>
+<div class="max-w-7xl mx-auto px-4 py-3 flex gap-4 items-start">
+  <aside class="hidden lg:flex flex-col shrink-0 w-56 sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto">
+    <p class="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-sky-500">Kategori</p>
+    <nav id="catNav" class="flex flex-col gap-0.5"></nav>
+  </aside>
+  <main class="flex-1 min-w-0">
+    <div id="chips" class="flex lg:hidden gap-1.5 mb-3 overflow-x-auto pb-1"></div>
+    <div id="grid" class="flex flex-wrap gap-2"></div>
+  </main>
+</div>
 
 <footer class="max-w-7xl mx-auto px-4 pb-4 text-center text-[11px] text-sky-500">
   Data disimpan secara peribadi dalam pelayar anda (localStorage). Eksport: backup JSON, atau fail bookmarks HTML untuk Chrome/Edge/Firefox.
@@ -125,9 +131,19 @@ function cats() {
 
 function chipHtml(label, val, count) {
   const active = activeCat === val;
-  return `<button data-cat="${esc(val)}" class="px-2.5 py-1 rounded-full text-xs border transition ${active
+  return `<button data-cat="${esc(val)}" class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-full text-xs border transition ${active
     ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200'
     : 'bg-white text-slate-600 border-sky-200 hover:border-blue-400 hover:text-blue-600'}">${esc(label)} <span class="opacity-60">${count}</span></button>`;
+}
+
+function navItemHtml(label, val, count) {
+  const active = activeCat === val;
+  return `<button data-cat="${esc(val)}" title="${esc(label)}" class="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-left transition ${active
+    ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+    : 'text-slate-600 hover:bg-sky-100 hover:text-blue-700'}">
+    <span class="min-w-0 break-words leading-snug">${esc(label)}</span>
+    <span class="ml-auto shrink-0 text-xs px-1.5 py-0.5 rounded-md ${active ? 'bg-white/20' : 'bg-sky-100 text-sky-600'}">${count}</span>
+  </button>`;
 }
 
 function cardHtml(l) {
@@ -159,6 +175,9 @@ function render() {
   const all = cats();
   $('#stats').textContent = `${state.links.length} link · ${all.length} kategori`;
   $('#catList').innerHTML = all.map(c => `<option value="${esc(c)}"></option>`).join('');
+  const navAll = navItemHtml('Semua', '__all', state.links.length) +
+    all.map(c => navItemHtml(c, c, state.links.filter(l => catOf(l) === c).length)).join('');
+  $('#catNav').innerHTML = navAll;
   $('#chips').innerHTML = chipHtml('Semua', '__all', state.links.length) +
     all.map(c => chipHtml(c, c, state.links.filter(l => catOf(l) === c).length)).join('');
 
@@ -231,12 +250,14 @@ $('#linkForm').addEventListener('submit', e => {
   closeModal();
 });
 
-$('#chips').addEventListener('click', e => {
-  const b = e.target.closest('button[data-cat]');
-  if (!b) return;
-  activeCat = b.dataset.cat;
-  render();
-});
+for (const sel of ['#chips', '#catNav']) {
+  $(sel).addEventListener('click', e => {
+    const b = e.target.closest('button[data-cat]');
+    if (!b) return;
+    activeCat = b.dataset.cat;
+    render();
+  });
+}
 
 $('#grid').addEventListener('click', e => {
   const b = e.target.closest('button[data-act]');
