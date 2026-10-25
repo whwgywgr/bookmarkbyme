@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "BookmarkByME – Buka Link di Tab Belakang",
+  "version": "1.0",
+  "description": "Klik biasa pada link dalam BookmarkByME membuka tab di belakang - anda kekal di halaman BookmarkByME.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:8177/*",
+        "https://whwgywgr.github.io/bookmarkbyme/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
