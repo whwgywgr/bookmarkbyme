@@ -393,7 +393,7 @@ export default function Page() {
           target="_blank"
           rel="noopener noreferrer"
           title={pretty(l.url)}
-          className="min-w-0 text-sm font-semibold text-foreground hover:text-primary"
+          className="min-w-0 text-sm text-foreground hover:text-primary"
         >
           {l.name}
         </a>
