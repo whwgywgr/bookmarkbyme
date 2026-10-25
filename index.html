@@ -49,7 +49,7 @@
 
 <main class="max-w-7xl mx-auto px-4 py-3">
   <div id="chips" class="flex flex-wrap gap-1.5 mb-3"></div>
-  <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2"></div>
+  <div id="grid" class="flex flex-wrap gap-2"></div>
 </main>
 
 <footer class="max-w-7xl mx-auto px-4 pb-4 text-center text-[11px] text-sky-500">
@@ -135,14 +135,14 @@ function cardHtml(l) {
   const color = `hsl(${hue(l.name || l.url)} 70% 55%)`;
   const href = esc(normUrl(l.url));
   return `
-  <div class="group relative bg-white/90 border border-sky-100 rounded-xl p-2.5 shadow-sm hover:shadow-md hover:border-sky-300 hover:-translate-y-0.5 transition-all flex items-center gap-2.5">
+  <div class="group relative bg-white/90 border border-sky-100 rounded-xl p-2.5 shadow-sm hover:shadow-md hover:border-sky-300 hover:-translate-y-0.5 transition-all flex items-center gap-2.5 max-w-full overflow-hidden">
     <div class="relative w-7 h-7 shrink-0">
       <div class="absolute inset-0 rounded-md flex items-center justify-center text-white text-xs font-bold select-none" style="background:${color}">${esc(letter)}</div>
       <img src="${favicon(l.url)}" alt="" class="relative w-7 h-7 rounded-md object-contain bg-white" onerror="this.style.display='none'" />
     </div>
-    <div class="min-w-0 flex-1">
-      <a href="${href}" target="_blank" rel="noopener noreferrer" class="block text-sm font-semibold text-slate-800 hover:text-blue-600 truncate">${esc(l.name)}</a>
-      <a href="${href}" target="_blank" rel="noopener noreferrer" class="block text-[11px] text-sky-500 hover:text-blue-500 hover:underline truncate">${esc(pretty(l.url))}</a>
+    <div class="min-w-0">
+      <a href="${href}" target="_blank" rel="noopener noreferrer" title="${esc(l.name)}" class="block text-sm font-semibold text-slate-800 hover:text-blue-600">${esc(l.name)}</a>
+      <a href="${href}" target="_blank" rel="noopener noreferrer" title="${esc(pretty(l.url))}" class="block w-0 min-w-full truncate text-[11px] text-sky-500 hover:text-blue-500 hover:underline">${esc(pretty(l.url))}</a>
     </div>
     <div class="flex gap-0.5 sm:static absolute top-1 right-1 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 transition-opacity bg-white/80 sm:bg-transparent rounded-lg sm:rounded-none">
       <button data-act="edit" data-id="${esc(l.id)}" title="Edit" class="p-1 rounded-md text-slate-400 hover:text-blue-600 hover:bg-sky-100 transition">
@@ -170,13 +170,13 @@ function render() {
   });
 
   const empty = state.links.length === 0
-    ? `<div class="col-span-full text-center py-12">
+    ? `<div class="w-full text-center py-12">
          <div class="text-4xl mb-2">🔗</div>
          <p class="font-semibold text-blue-900">Belum ada link</p>
          <p class="text-sm text-sky-600 mt-1">Klik butang <span class="font-medium">+ Link Baharu</span> untuk mula simpan link anda.</p>
        </div>`
     : list.length === 0
-      ? `<div class="col-span-full text-center py-12">
+      ? `<div class="w-full text-center py-12">
            <div class="text-3xl mb-2">🔍</div>
            <p class="font-medium text-blue-900">Tiada hasil dijumpai</p>
            <p class="text-sm text-sky-600 mt-1">Cuba kata kunci atau kategori lain.</p>
